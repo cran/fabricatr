@@ -1,9 +1,10 @@
-#' @importFrom rlang quos get_expr quo_text
+#' @importFrom rlang quos get_expr quo_text enquo
 #'
 #' @rdname fabricate
 #' @export
 nest_level <- function(N = NULL,
                        ...) {
+  N <- enquo(N)
   data_arguments <- quos(...)
   if ("working_environment_" %in% names(data_arguments)) {
     working_environment_ <- get_expr(data_arguments[["working_environment_"]])
@@ -36,8 +37,9 @@ nest_level_internal <- function(N = NULL, ID_label = NULL,
   if (is.null(dim(working_environment_$data_frame_output_))) {
     stop(
       "You can't nest a level if there is no level to nest inside. You can ",
-      "resolve this issue by using `add_level()` instead of `nest_level()` or ",
-      "by ensuring that data has been created or imported before using `nest_level()`"
+      "resolve this issue by using `add_level()` instead of `nest_level()` ",
+      "or by ensuring that data has been created or imported before using ",
+      "`nest_level()`"
     )
   }
 
@@ -58,8 +60,8 @@ nest_level_internal <- function(N = NULL, ID_label = NULL,
   # We're now going to modify the index set to take into account the expansion
   # If N is a single number, then we repeat each index N times
   # If N is of length past_level_N, then we repeat each index N_i times.
-  # For r's rep, the each / times arguments have odd behaviour that necessitates
-  # this approach
+  # For r's rep, the each / times arguments have odd behaviour that
+  # necessitates this approach
   if (length(N) == 1) {
     rep_indices <- rep(indices, each = N)
   } else {
@@ -73,7 +75,9 @@ nest_level_internal <- function(N = NULL, ID_label = NULL,
   # Expand the data frame by duplicating the indices and then coerce the data
   # frame to a list -- we do this to basically make variables accessible in the
   # namespace.
-  working_data_list <- as.list(working_environment_$data_frame_output_[rep_indices, , drop = FALSE])
+  working_data_list <- as.list(
+    working_environment_$data_frame_output_[rep_indices, , drop = FALSE]
+    )
 
   # Everything after here is non-unique to nest_level versus add_level -- need
   # to think about how to refactor this out.
@@ -109,12 +113,18 @@ nest_level_internal <- function(N = NULL, ID_label = NULL,
       working_data_list[[i]] <- rep(working_data_list[[i]], (N / inner_N))
     }
 
+    # Length one is a special case.
+    if(length(working_data_list[[i]]) == 1) {
+      working_data_list[[i]] <- rep(working_data_list[[i]], N)
+    }
+
     if (length(working_data_list[[i]]) != N) {
       stop(
         "Nested data length for the variable \"", i, "\" ",
-        "appears to be incorrect. Nested data must either inherit the length N ",
-        "or be fixed-length variables equal to the total number of observations ",
-        "at the outer level. (In this case, ", N, ")\n\n"
+        "appears to be incorrect. Nested data must either inherit the length ",
+        "N or be fixed-length variables equal to the total number of ",
+        "observations at the outer level. (In this case, ", N, "). Variable ",
+        "supplied was length ", length(working_data_list[[i]]), "\n\n"
       )
     }
 

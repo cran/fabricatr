@@ -1,10 +1,11 @@
-#' @importFrom rlang quos get_expr quo_text
+#' @importFrom rlang quos get_expr quo_text enquo
 #'
 #' @rdname fabricate
 #' @export
 add_level <- function(N = NULL,
                       ...,
                       nest = TRUE) {
+  N <- enquo(N)
   data_arguments <- quos(...)
   if ("working_environment_" %in% names(data_arguments)) {
     working_environment_ <- get_expr(data_arguments[["working_environment_"]])
@@ -60,7 +61,7 @@ add_level_internal <- function(N = NULL, ID_label = NULL,
   }
 
   # Staple in an ID column onto the data list.
-  if (!is.null(ID_label)) {
+  if (!is.null(ID_label) && !is.na(ID_label)) {
     # It's actually not possible the working data frame already has an ID label
     # since we forcibly shelved it earlier -- so let's just plough along.
 
@@ -76,15 +77,19 @@ add_level_internal <- function(N = NULL, ID_label = NULL,
     stop("Please specify a name for the level call you are creating.")
   }
 
+  if(any(names(data_arguments) == "")) {
+    stop("All variables inside an add_level call must be named.")
+  }
+
   # Loop through each of the variable generating arguments
   for (i in names(data_arguments)) {
     # Evaluate the formula in an environment consisting of:
     # 1) The current working data list
     # 2) A list that tells everyone what N means in this context.
-    working_data_list[[i]] <- eval_tidy(
+    working_data_list[[i]] <- expand_or_error(eval_tidy(
       data_arguments[[i]],
       append(working_data_list, list(N = N))
-    )
+    ), N, i, data_arguments[[i]])
 
     # Write the variable name to the list of variable names
     add_variable_name(working_environment_, i)

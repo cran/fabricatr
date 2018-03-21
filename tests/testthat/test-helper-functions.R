@@ -68,7 +68,10 @@ test_that("Error handlers: check_rectangular", {
     Z = 4
   )
   N <- 10
-  check_rectangular(test, N)
+  rectangularized <- check_rectangular(test, N)
+  coerced_df <- as.data.frame(rectangularized)
+  expect_equal(nrow(coerced_df), 10)
+  expect_equal(ncol(coerced_df), 3)
 
   test[["K"]] <- 5:7
   expect_error(check_rectangular(test, N))
@@ -83,6 +86,9 @@ test_that("get_unique_variables_by_level", {
 })
 
 test_that("Advance lookahead symbol evaluator", {
-  my_quos <- rlang::quos(J = KK * LMNOP * max(F, G, H, 20, (((K)))))
-  expect_equal(length(get_symbols_from_quosure(my_quos)[[1]]), 6)
+  my_quos <- rlang::quos(J = KK * LMNOP * max(F, G, H, 20, (((K)))), Z = K)
+  expect_equal(
+    get_symbols_from_quosures(my_quos),
+    c("KK", "LMNOP", "F", "G", "H", "K")
+  )
 })

@@ -18,7 +18,9 @@
 #' @param data (optional) user-provided data that forms the basis of the
 #' fabrication, e.g. you can add variables to existing data. Provide either
 #' \code{N} or \code{data} (\code{N} is the number of rows of the data if
-#' \code{data} is provided).
+#' \code{data} is provided). If \code{data} and \code{N} are not provided,
+#' fabricatr will try to interpret the first un-named argument as either \code{data}
+#' or \code{N} based on type.
 #' @param N (optional) number of units to draw. If provided as
 #' \code{fabricate(N = 5)}, this determines the number of units in the
 #' single-level data. If provided in \code{add_level}, e.g.
@@ -83,12 +85,13 @@
 #'   students = link_levels(N = 2000,
 #'                           by=join(ps_quality, ss_quality, rho = 0.5),
 #'                           student_quality = ps_quality + 3*ss_quality + rnorm(N)))
-#' @seealso [link_levels()]
+#' @seealso \code{\link{link_levels}}
 #' @importFrom rlang quos quo_name eval_tidy lang_name lang_modify lang_args
+#' @importFrom rlang lang_args_names
 #' is_lang get_expr
 #'
 #' @export
-fabricate <- function(data = NULL, ..., N = NULL, ID_label = NULL) {
+fabricate <- function(..., data = NULL, N = NULL, ID_label = NULL) {
   # Store all data generation arguments in a quosure for future evaluation
   # A quosure contains unevaluated formulae and function calls.
   data_arguments <- quos(...)
@@ -97,22 +100,57 @@ fabricate <- function(data = NULL, ..., N = NULL, ID_label = NULL) {
   # or a series of level calls. You can't mix and match.
   # This helper function will be TRUE if calls are all levels, FALSE
   # if there are no calls or they are not levels.
+  explicit_data_supplied <- !missing(data) && !is.null(data)
+  explicit_n_supplied <- (!is.null(N) & !missing(N))
+
+  # The user did not seem to do one of the three possible things we can do.
+  # Maybe they anonymously passed data or N.
+  if (!explicit_data_supplied && !explicit_n_supplied) {
+    first_unnamed_arg <- which(names(data_arguments) == "" &
+                                 call_not_level_call(data_arguments))[1]
+
+    # Let's check the first unnamed argument.
+    if(!is.na(first_unnamed_arg) &&
+       first_unnamed_arg <= length(data_arguments)) {
+      # Eval it; whether it's data or N, we don't need any environment
+      # from anything else. If it fails, not great.
+      evaluate_first_arg <- eval_tidy(data_arguments[[first_unnamed_arg]])
+
+      # If they supplied a list or data frame, they meant data.
+      if(is.list(evaluate_first_arg) || is.data.frame(evaluate_first_arg)) {
+        data <- evaluate_first_arg
+      } else if(is.null(dim(evaluate_first_arg)) &&
+                is.numeric(evaluate_first_arg) &&
+                length(evaluate_first_arg) == 1) {
+        # If they supplied a number, they meant N, we think.
+        N <- evaluate_first_arg
+      }
+
+      # Whichever it was, remove it from the remaining args, because it's
+      # not a variable or level call. If there's not an N or data, this
+      # won't be evaluate anyway.
+      data_arguments <- data_arguments[-first_unnamed_arg]
+    }
+    # If not, we'll error out below
+  }
+
+  # Now re-run the checks.
   all_levels <- check_all_levels(data_arguments)
+  data_supplied <- (!missing(data) && !is.null(data) & !all_levels)
+  n_supplied <- (!is.null(N) & !missing(N))
 
   # User must provide exactly one of:
   # 1) One or more level calls (with or without importing their own data)
   # 2) Import their own data and do not involve level calls
   # 3) Provide an N without importing their own data
-  if (sum(
-    (!missing(data) && !is.null(data) & !all_levels),
-    (!is.null(N) & !missing(N)),
-    all_levels
-  ) != 1) {
+  if (sum(all_levels, data_supplied, n_supplied) != 1) {
     stop(
       "You must do exactly one of: \n",
       "1) One or more level calls, with or without existing data \n",
-      "2) Import existing data and optionally, add new variables without adding a level \n",
-      "3) Provide an `N` without importing data and optionally, add new variables"
+      "2) Import existing data and optionally, add new variables without ",
+      "adding a level \n",
+      "3) Provide an `N` without importing data and optionally, add new ",
+      "variables"
     )
   }
 
@@ -120,7 +158,20 @@ fabricate <- function(data = NULL, ..., N = NULL, ID_label = NULL) {
   if (all_levels) {
     # Ensure the user provided a name for each level call.
     if (is.null(names(data_arguments)) | any(names(data_arguments) == "")) {
-      stop("You must provide a name for each level you create.")
+      # If they didn't, see if we can poach it out of the arguments
+      for(i in seq_len(length(data_arguments))) {
+        if(is.null(names(data_arguments[[i]])) ||
+           names(data_arguments[[i]]) == "") {
+
+          # Can't salvage this one
+          if(!"ID_label" %in% lang_args_names(data_arguments[[i]])) {
+            stop("You must provide a name for each level that you create.")
+          }
+
+          names(data_arguments)[i] <- lang_args(data_arguments[[i]])$ID_label
+
+        }
+      }
     }
 
     # User provided data, if any, should be preloaded into working environment
@@ -153,7 +204,6 @@ fabricate <- function(data = NULL, ..., N = NULL, ID_label = NULL) {
 
   # User did not pass data -- they passed N
   if (is.null(data) | missing(data)) {
-
     # Single level -- maybe the user provided an ID_label, maybe they didn't.
     # Sanity check and/or construct an ID label for the new data.
     ID_label <- handle_id(ID_label, NULL)
@@ -179,19 +229,51 @@ fabricate <- function(data = NULL, ..., N = NULL, ID_label = NULL) {
 
   # Single level -- maybe the user provided an ID_label, maybe they didn't.
   # Sanity check and/or construct an ID label for the new data.
+  explicit_ID_provided <- !is.null(ID_label)
   ID_label <- handle_id(ID_label, working_environment$data_frame_output_)
 
   # User passed data, not N
   # First, let's dynamically get N from the number of rows
   N <- nrow(working_environment$data_frame_output_)
 
-  # Now, see if we need to staple one on
-  if (ID_label %in% names(working_environment$data_frame_output_)) {
+  # Now, see if we need to staple an ID column on. This is a bit of a mess.
+  if(is.na(ID_label)) {
+    # Explicit override of ID_label -- don't add one if ID_label is NA,
+    # explicitly
+  } else if (ID_label %in% names(working_environment$data_frame_output_)) {
+    # There's already an ID column named the thing we want to call the ID
+    # column, so keep it. If the user did not specify, then this shouldn't
+    # happen because handle_id would have moved to a fallback ID.
     add_level_id(working_environment, ID_label)
-  } else if (length(data_arguments)) {
+  } else if(explicit_ID_provided) {
+    # We explicitly asked for an ID column, so let's do it.
     working_environment$data_frame_output_[[ID_label]] <- generate_id_pad(N)
     add_level_id(working_environment, ID_label)
     add_variable_name(working_environment, ID_label)
+  } else if(length(data_arguments)) {
+    # We didn't explicitly ask for an ID column, but we are modifying the data
+    # so probably we should do it unless there's a column that's exactly this.
+    # Generate the ID label and check if there's a column that's exactly this.
+    temp_id <- generate_id_pad(N)
+    already_has_exact_id <- FALSE
+    for(i in seq_len(ncol(working_environment$data_frame_output_))) {
+      if(identical(working_environment$data_frame_output_[[i]], temp_id)) {
+        already_has_exact_id <- TRUE
+        break
+      }
+    }
+
+    # If we didn't find the exact ID label, then we have to add one.
+    if(!already_has_exact_id) {
+      working_environment$data_frame_output_[[ID_label]] <- generate_id_pad(N)
+      add_level_id(working_environment, ID_label)
+      add_variable_name(working_environment, ID_label)
+    } else {
+      # Just record the one we already have.
+      proximate_id <- names(working_environment$data_frame_output_)[[i]]
+      add_level_id(working_environment, proximate_id)
+      add_variable_name(working_environment, proximate_id)
+    }
   }
 
   # If the user does a passthrough for some reason, just return as is.
