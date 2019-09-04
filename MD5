@@ -1,8 +1,8 @@
-31353d84adea53ddfbc5f691bfdecb9e *DESCRIPTION
+25250a81a8965d17f1d961bb54d638c6 *DESCRIPTION
 e2f304adcdbb63b92140a8f05bf846d0 *LICENSE
-11b42698d701a1e61a61ae5abccebb8c *NAMESPACE
-333e5f4f07a68ba4d423f52037fb993e *NEWS.md
-b3425a4329ce5dbe6b4c6fbe3f43e9bd *R/aaa_fabricate.R
+a30afc6fbf8e83abc43c5b2ce475b4cc *NAMESPACE
+4e4bb2ce4e75ca21e94647cfe4b48207 *NEWS.md
+12c970e6f6d95c7ef2da06112299b25c *R/aaa_fabricate.R
 59d5f32b89189a26d0486bcd533e645b *R/add_level.R
 8eb5b3a5791168d36ebf549757892997 *R/correlate.R
 c54b2d8def889a1069d5e159db407e90 *R/cross_classify_helpers.R
@@ -10,7 +10,7 @@ c54b2d8def889a1069d5e159db407e90 *R/cross_classify_helpers.R
 1b4991631fada3c66721594354923482 *R/draw_binary_icc.R
 7d8306364e8197031339465d1b8cfa9e *R/draw_normal_icc.R
 1fa07beef32faa8214af7dc718ada771 *R/fabricatr.R
-3c7c8153447e1a521ea1dc1d0e0f5696 *R/helper_functions.R
+26d2a992fa8435c9be5254b5ec339dcd *R/helper_functions.R
 840615346af00e36606840cf0199628e *R/modify_level.R
 1a5251029ed668f3a143d4e59bceb1f4 *R/nest_level.R
 909f34a5f8644ff73c6ac270d7261287 *R/resample_data.R
