@@ -195,30 +195,17 @@ handle_n <- function(N, add_level=TRUE, working_environment, parent_frame_levels
   # variables.
   N <- eval_tidy(N, data = df)
 
-  # User provided an unevaluated function
-  if (typeof(N) == "closure") {
-    stop("`N` must not be a function.")
-  }
-
-  if (!is_integerish(N) || any(N <= 0))
+  if (!is_integerish(N) || any(N < 0))
     stop("Provided `N` must be positive integers.")
 
-  if(add_level && !is_scalar_integerish(N))
-        stop("When adding a new level, the specified `N` must be a single number.")
-
-  if (length(N) > 1) {
-    # User specified more than one N; presumably this is one N for each
-    # obs of the active data set
-
-    if (length(N) != nrow(df)) {
-      stop(
-        "`N` must be either a single number or a vector of length ",
-        nrow(df)
-      )
-    }
+  if(add_level) {
+      if(length(N) == 1 && N == 0) stop("New level has N == 0")
+      if(!is_scalar_integerish(N)) stop("New level has length(N) > 1 ")
   }
-
-
+  else { # If not adding then nesting
+      if(! length(N) %in% c(1, nrow(df)))
+          stop("Nested levels must have `N` of length 1 or same size as parent data frame.")
+  }
 
   N
 }
@@ -333,13 +320,13 @@ expand_or_error <- function(vector_data, N, variable_name, call_string) {
   if(length(vector_dims) > 1) {
     if(vector_dims[1] == N){
       return(vector_data)
-    }
-    else {
+    } else if (vector_dims[1] == 1) {
+      return(vector_data[rep(seq_len(nrow(vector_data)), each = N), , drop = FALSE])
+    } else {
       stop(simpleError(paste0("Nested structures must have `N.` rows ",
                               "In this call, `N` = ", N, " while the variable ",
                               variable_name, " is length ", vector_dims[1]),
                        call = f_rhs(call_string)))
-
     }
 
   }
