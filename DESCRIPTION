@@ -1,7 +1,7 @@
 Package: fabricatr
 Type: Package
 Title: Imagine Your Data Before You Collect It
-Version: 0.12.0
+Version: 0.14.0
 Authors@R: c(person("Graeme", "Blair", email = "graeme.blair@ucla.edu", role = c("aut", "cre")),
              person("Jasper", "Cooper", email = "jjc2247@columbia.edu", role = c("aut")),
              person("Alexander", "Coppock", email = "alex.coppock@yale.edu", role = c("aut")),
@@ -16,13 +16,13 @@ URL: https://declaredesign.org/r/fabricatr,
         https://github.com/DeclareDesign/fabricatr
 BugReports: https://github.com/DeclareDesign/fabricatr/issues
 Depends: R (>= 3.5.0)
-Imports: rlang (>= 0.2.0), tibble, backports
+Imports: rlang (>= 0.2.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 Suggests: testthat, data.table, mvnfast, MASS, extraDistr
 NeedsCompilation: no
-Packaged: 2021-01-09 00:36:57 UTC; ac2595
+Packaged: 2021-02-08 02:42:32 UTC; gblair
 Author: Graeme Blair [aut, cre],
   Jasper Cooper [aut],
   Alexander Coppock [aut],
@@ -31,4 +31,4 @@ Author: Graeme Blair [aut, cre],
   Neal Fultz [aut]
 Maintainer: Graeme Blair <graeme.blair@ucla.edu>
 Repository: CRAN
-Date/Publication: 2021-01-09 07:30:02 UTC
+Date/Publication: 2021-02-09 06:10:23 UTC
