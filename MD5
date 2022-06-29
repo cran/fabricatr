@@ -1,7 +1,7 @@
-c65e97e73a14806b0b8ef0804ba23461 *DESCRIPTION
+c4d558f5f4df9a9e660d07ffa99b67ad *DESCRIPTION
 e2f304adcdbb63b92140a8f05bf846d0 *LICENSE
 55f20c862f227507ffea5f5a70f0b68d *NAMESPACE
-52bb5d8703cc65febac77e52c13c8ed0 *NEWS.md
+bbf080343ed84d2896cd30c6a0086ecb *NEWS.md
 e4c6de903ba73c8e0874f0dce6ac90ad *R/aaa_fabricate.R
 163f99c28362f2fb419fa6caba0227b9 *R/add_level.R
 8eb5b3a5791168d36ebf549757892997 *R/correlate.R
@@ -17,12 +17,12 @@ c8b751b6abe70be32247ba70aa45ce84 *R/nest_level.R
 caa0be48259b451d770dbd97ab797fce *R/potential_outcomes.R
 909f34a5f8644ff73c6ac270d7261287 *R/resample_data.R
 f8a72258d7c93b3837644bd9f3705714 *R/reveal_outcomes.R
-225ff26c8c538627b2bec9266ba5f7c5 *R/variable_creation_functions.R
+c5289921dc7d27c861d4a01968c0f201 *R/variable_creation_functions.R
 e072b1331f6d66132666ee912da841a3 *man/ALL.Rd
 18ed3c81ad9ec350e9847a8c5bde7a98 *man/correlate.Rd
 ae0eaf7910d4034c8fe7148be4e234ce *man/cross_levels.Rd
 3934dcbcea81917ec155e3cf957527b1 *man/draw_binary_icc.Rd
-6d270e78d5593d80cd36128bb0a2eb97 *man/draw_discrete.Rd
+bcf885c9c78ef3bfb1441e7e119852d7 *man/draw_discrete.Rd
 e762d8908826479a52953f68d754dea9 *man/draw_likert.Rd
 5bcd18a8a1ecdd465c7990072cc0c6df *man/draw_multivariate.Rd
 0a85c389d6b065de404737788c50c062 *man/draw_normal_icc.Rd
@@ -48,4 +48,4 @@ c38f888286de7049781592c65882a81a *tests/testthat/test-resampling.R
 1ff1bbf375edda8fade3cc40f0e96e86 *tests/testthat/test-reveal-outcomes.R
 c45520307a1f8ef35abad65fd706fd74 *tests/testthat/test-split-apply-combine-level.R
 5d1df3a8fb77263a3989a79396ba5d7c *tests/testthat/test-start-with-existing-data.R
-91c42b190dcc71294b06be261af1db34 *tests/testthat/test-variables.R
+90fc91d3c6d1b1ee4a1e28b032a88971 *tests/testthat/test-variables.R
