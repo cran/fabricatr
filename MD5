@@ -1,7 +1,7 @@
-c4d558f5f4df9a9e660d07ffa99b67ad *DESCRIPTION
+22657edb8bd5a4de791a87630f87a032 *DESCRIPTION
 e2f304adcdbb63b92140a8f05bf846d0 *LICENSE
 55f20c862f227507ffea5f5a70f0b68d *NAMESPACE
-bbf080343ed84d2896cd30c6a0086ecb *NEWS.md
+96b03eac5e9243118a35e8abc9f89550 *NEWS.md
 e4c6de903ba73c8e0874f0dce6ac90ad *R/aaa_fabricate.R
 163f99c28362f2fb419fa6caba0227b9 *R/add_level.R
 8eb5b3a5791168d36ebf549757892997 *R/correlate.R
@@ -10,7 +10,7 @@ a3906d81549227dbfc4d6fa0709d08ca *R/cross_levels.R
 1b4991631fada3c66721594354923482 *R/draw_binary_icc.R
 a409bb72e93e366091f446c753ae8d79 *R/draw_multivariate.R
 205ea3ba864181c1c50022ebf163a4b7 *R/draw_normal_icc.R
-372c78a5cc649cd14d04bcdc1b0397f2 *R/fabricatr.R
+18e2ad1a650cabb458d3e87e241a90f8 *R/fabricatr.R
 d83ff6c6e9b01fd1bd28c566690c3a40 *R/helper_functions.R
 9ba2ced3ffd82f47b7025c02e274e1d8 *R/modify_level.R
 c8b751b6abe70be32247ba70aa45ce84 *R/nest_level.R
@@ -27,7 +27,7 @@ e762d8908826479a52953f68d754dea9 *man/draw_likert.Rd
 5bcd18a8a1ecdd465c7990072cc0c6df *man/draw_multivariate.Rd
 0a85c389d6b065de404737788c50c062 *man/draw_normal_icc.Rd
 74fc2fa6132ca7ef247d404c36a63f19 *man/fabricate.Rd
-7e2b308648543b9245cd0000fb2d6f8c *man/fabricatr.Rd
+c4a8e5a88dad9628e0d27fc72fe066be *man/fabricatr.Rd
 6bfbd637fa4915a15e8b8fdb4ee573cf *man/get_unique_variables_by_level.Rd
 a7f78cf43dc1c23f8c6d9bc33d75f45e *man/join_using.Rd
 c1507514dd9a04559b104521febe9e0c *man/potential_outcomes.Rd

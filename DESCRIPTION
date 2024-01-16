@@ -1,7 +1,7 @@
 Package: fabricatr
 Type: Package
 Title: Imagine Your Data Before You Collect It
-Version: 1.0.0
+Version: 1.0.2
 Authors@R: c(person("Graeme", "Blair", email = "graeme.blair@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9164-2102")),
              person("Jasper", "Cooper", email = "jaspercooper@gmail.com", role = "aut", comment = c(ORCID = "0000-0002-8639-3188")),
              person("Alexander", "Coppock", email = "acoppock@gmail.com", role = "aut", comment = c(ORCID = "0000-0002-5733-2386")),
@@ -20,10 +20,10 @@ Depends: R (>= 3.5.0)
 Imports: rlang (>= 1.0.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Suggests: testthat, data.table, mvnfast, MASS, extraDistr
 NeedsCompilation: no
-Packaged: 2022-06-29 01:13:13 UTC; gblair
+Packaged: 2024-01-16 06:05:18 UTC; gblair
 Author: Graeme Blair [aut, cre] (<https://orcid.org/0000-0001-9164-2102>),
   Jasper Cooper [aut] (<https://orcid.org/0000-0002-8639-3188>),
   Alexander Coppock [aut] (<https://orcid.org/0000-0002-5733-2386>),
@@ -33,4 +33,4 @@ Author: Graeme Blair [aut, cre] (<https://orcid.org/0000-0001-9164-2102>),
   David C. Hall [ctb] (<https://orcid.org/0000-0002-2193-0480>)
 Maintainer: Graeme Blair <graeme.blair@gmail.com>
 Repository: CRAN
-Date/Publication: 2022-06-29 12:50:02 UTC
+Date/Publication: 2024-01-16 14:00:05 UTC
